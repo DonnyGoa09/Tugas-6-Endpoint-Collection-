@@ -123,4 +123,4 @@ Collection GameHunter sudah dapat dicari, diurutkan, dan dipaginasi. Validasi se
 
 ## 12. Deklarasi penggunaan AI
 
-Saya menggunakan ChatGPT/Codex untuk membantu langkah praktikum saat ada kendala. Bantuan yang diminta: mengecek contract GameHunter, melengkapi pengujian Postman, dan menyusun laporan singkat. Bagian yang dipakai adalah koleksi request, pemeriksaan respons, dan dokumentasi. Hasil diperiksa melalui dokumentasi Laravel/Postman, test project, dan eksekusi request.
+AI membantu saya dalam praktikum dan langkah pengerjaan saat ada kendala.
