@@ -1,0 +1,654 @@
+{
+  "info": {
+    "name": "Tugas 6 - GameHunter Collection",
+    "description": "GET collection GameHunter. Jalankan Laravel di base_url. Data uji: Orbit Alpha (pc), Orbit Bravo (browser), Orbit Charlie (pc), masing-masing satu. Impor lalu Run collection berurutan. Tidak menggunakan autentikasi. Contoh respons disimpan dari eksekusi 29 Oktober 2026.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Default Pagination",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test('Collection contract',()=>pm.expect(b).to.have.all.keys('data','links','meta'));",
+              "pm.test('Default page and size',()=>{pm.expect(b.meta.current_page).to.eql(1);pm.expect(b.meta.per_page).to.eql(5);});",
+              "pm.test('Default data size',()=>pm.expect(b.data.length).to.eql(Math.min(5,b.meta.total)));",
+              "pm.test('Default id ascending',()=>{const ids=b.data.map(g=>g.id);pm.expect(ids).to.eql([...ids].sort((a,b)=>a-b));});",
+              "pm.test('Pagination metadata',()=>{pm.expect(b.links).to.have.all.keys('first','last','prev','next');pm.expect(b.meta.current_page).to.be.a('number');pm.expect(b.meta.per_page).to.be.within(1,50);pm.expect(b.meta.total).to.be.at.least(b.data.length);});",
+              "pm.test('GameResource fields and types',()=>{b.data.forEach(g=>{pm.expect(g).to.have.all.keys('id','title','platform','is_free','source','updated_at');pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.be.a('string');});});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"Game Contoh PC\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"fixture\",\n      \"updated_at\": \"2026-10-09T08:22:09.000000Z\"\n    },\n    {\n      \"id\": 2,\n      \"title\": \"Game Contoh Browser\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"fixture\",\n      \"updated_at\": \"2026-10-09T08:22:09.000000Z\"\n    },\n    {\n      \"id\": 7,\n      \"title\": \"Orbit Alpha\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    },\n    {\n      \"id\": 8,\n      \"title\": \"Orbit Bravo\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    },\n    {\n      \"id\": 9,\n      \"title\": \"Orbit Charlie\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"http://127.0.0.1:8000/api/games?page=1\",\n    \"last\": \"http://127.0.0.1:8000/api/games?page=1\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"from\": 1,\n    \"last_page\": 1,\n    \"links\": [\n      {\n        \"url\": null,\n        \"label\": \"&laquo; Previous\",\n        \"page\": null,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?page=1\",\n        \"label\": \"1\",\n        \"page\": 1,\n        \"active\": true\n      },\n      {\n        \"url\": null,\n        \"label\": \"Next &raquo;\",\n        \"page\": null,\n        \"active\": false\n      }\n    ],\n    \"path\": \"http://127.0.0.1:8000/api/games\",\n    \"per_page\": 5,\n    \"to\": 5,\n    \"total\": 5\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Pagination Page 1",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?per_page=2&page=1"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test('Collection contract',()=>{pm.expect(b).to.have.all.keys('data','links','meta');pm.expect(b.data).to.be.an('array');});",
+              "pm.test('Check 1',()=>{pm.expect(b.data).to.have.lengthOf(2);});",
+              "pm.test('Check 2',()=>{pm.expect(b.meta.current_page).to.eql(1);});",
+              "pm.test('Check 3',()=>{pm.expect(b.links.next).to.include('page=2');});",
+              "pm.test('Pagination metadata',()=>{pm.expect(b.links).to.have.all.keys('first','last','prev','next');pm.expect(b.meta.current_page).to.be.a('number');pm.expect(b.meta.per_page).to.be.within(1,50);pm.expect(b.meta.total).to.be.at.least(b.data.length);});",
+              "pm.test('GameResource fields and types',()=>{b.data.forEach(g=>{pm.expect(g).to.have.all.keys('id','title','platform','is_free','source','updated_at');pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.be.a('string');});});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?per_page=2&page=1"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"Game Contoh PC\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"fixture\",\n      \"updated_at\": \"2026-10-09T08:22:09.000000Z\"\n    },\n    {\n      \"id\": 2,\n      \"title\": \"Game Contoh Browser\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"fixture\",\n      \"updated_at\": \"2026-10-09T08:22:09.000000Z\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"http://127.0.0.1:8000/api/games?per_page=2&page=1\",\n    \"last\": \"http://127.0.0.1:8000/api/games?per_page=2&page=3\",\n    \"prev\": null,\n    \"next\": \"http://127.0.0.1:8000/api/games?per_page=2&page=2\"\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"from\": 1,\n    \"last_page\": 3,\n    \"links\": [\n      {\n        \"url\": null,\n        \"label\": \"&laquo; Previous\",\n        \"page\": null,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?per_page=2&page=1\",\n        \"label\": \"1\",\n        \"page\": 1,\n        \"active\": true\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?per_page=2&page=2\",\n        \"label\": \"2\",\n        \"page\": 2,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?per_page=2&page=3\",\n        \"label\": \"3\",\n        \"page\": 3,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?per_page=2&page=2\",\n        \"label\": \"Next &raquo;\",\n        \"page\": 2,\n        \"active\": false\n      }\n    ],\n    \"path\": \"http://127.0.0.1:8000/api/games\",\n    \"per_page\": 2,\n    \"to\": 2,\n    \"total\": 5\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Pagination Page 2",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?per_page=2&page=2"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test('Collection contract',()=>{pm.expect(b).to.have.all.keys('data','links','meta');pm.expect(b.data).to.be.an('array');});",
+              "pm.test('Check 1',()=>{pm.expect(b.data).to.have.lengthOf(2);});",
+              "pm.test('Check 2',()=>{pm.expect(b.meta.current_page).to.eql(2);});",
+              "pm.test('Pagination metadata',()=>{pm.expect(b.links).to.have.all.keys('first','last','prev','next');pm.expect(b.meta.current_page).to.be.a('number');pm.expect(b.meta.per_page).to.be.within(1,50);pm.expect(b.meta.total).to.be.at.least(b.data.length);});",
+              "pm.test('GameResource fields and types',()=>{b.data.forEach(g=>{pm.expect(g).to.have.all.keys('id','title','platform','is_free','source','updated_at');pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.be.a('string');});});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?per_page=2&page=2"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 7,\n      \"title\": \"Orbit Alpha\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    },\n    {\n      \"id\": 8,\n      \"title\": \"Orbit Bravo\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"http://127.0.0.1:8000/api/games?per_page=2&page=1\",\n    \"last\": \"http://127.0.0.1:8000/api/games?per_page=2&page=3\",\n    \"prev\": \"http://127.0.0.1:8000/api/games?per_page=2&page=1\",\n    \"next\": \"http://127.0.0.1:8000/api/games?per_page=2&page=3\"\n  },\n  \"meta\": {\n    \"current_page\": 2,\n    \"from\": 3,\n    \"last_page\": 3,\n    \"links\": [\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?per_page=2&page=1\",\n        \"label\": \"&laquo; Previous\",\n        \"page\": 1,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?per_page=2&page=1\",\n        \"label\": \"1\",\n        \"page\": 1,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?per_page=2&page=2\",\n        \"label\": \"2\",\n        \"page\": 2,\n        \"active\": true\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?per_page=2&page=3\",\n        \"label\": \"3\",\n        \"page\": 3,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?per_page=2&page=3\",\n        \"label\": \"Next &raquo;\",\n        \"page\": 3,\n        \"active\": false\n      }\n    ],\n    \"path\": \"http://127.0.0.1:8000/api/games\",\n    \"per_page\": 2,\n    \"to\": 4,\n    \"total\": 5\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Search Title",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?search=Orbit"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test('Collection contract',()=>{pm.expect(b).to.have.all.keys('data','links','meta');pm.expect(b.data).to.be.an('array');});",
+              "pm.test('Check 1',()=>{pm.expect(b.data.map(g=>g.title)).to.eql(['Orbit Alpha','Orbit Bravo','Orbit Charlie']);});",
+              "pm.test('Pagination metadata',()=>{pm.expect(b.links).to.have.all.keys('first','last','prev','next');pm.expect(b.meta.current_page).to.be.a('number');pm.expect(b.meta.per_page).to.be.within(1,50);pm.expect(b.meta.total).to.be.at.least(b.data.length);});",
+              "pm.test('GameResource fields and types',()=>{b.data.forEach(g=>{pm.expect(g).to.have.all.keys('id','title','platform','is_free','source','updated_at');pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.be.a('string');});});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?search=Orbit"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 7,\n      \"title\": \"Orbit Alpha\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    },\n    {\n      \"id\": 8,\n      \"title\": \"Orbit Bravo\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    },\n    {\n      \"id\": 9,\n      \"title\": \"Orbit Charlie\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"http://127.0.0.1:8000/api/games?search=Orbit&page=1\",\n    \"last\": \"http://127.0.0.1:8000/api/games?search=Orbit&page=1\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"from\": 1,\n    \"last_page\": 1,\n    \"links\": [\n      {\n        \"url\": null,\n        \"label\": \"&laquo; Previous\",\n        \"page\": null,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?search=Orbit&page=1\",\n        \"label\": \"1\",\n        \"page\": 1,\n        \"active\": true\n      },\n      {\n        \"url\": null,\n        \"label\": \"Next &raquo;\",\n        \"page\": null,\n        \"active\": false\n      }\n    ],\n    \"path\": \"http://127.0.0.1:8000/api/games\",\n    \"per_page\": 5,\n    \"to\": 3,\n    \"total\": 3\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Search Platform",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?search=browser"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test('Collection contract',()=>{pm.expect(b).to.have.all.keys('data','links','meta');pm.expect(b.data).to.be.an('array');});",
+              "pm.test('Check 1',()=>{pm.expect(b.data.every(g=>g.title.toLowerCase().includes('browser')||g.platform==='browser')).to.eql(true);});",
+              "pm.test('Check 2',()=>{pm.expect(b.data.length).to.be.above(0);});",
+              "pm.test('Pagination metadata',()=>{pm.expect(b.links).to.have.all.keys('first','last','prev','next');pm.expect(b.meta.current_page).to.be.a('number');pm.expect(b.meta.per_page).to.be.within(1,50);pm.expect(b.meta.total).to.be.at.least(b.data.length);});",
+              "pm.test('GameResource fields and types',()=>{b.data.forEach(g=>{pm.expect(g).to.have.all.keys('id','title','platform','is_free','source','updated_at');pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.be.a('string');});});",
+              "pm.test('Second field matches even without title match',()=>pm.expect(b.data.some(g=>g.platform==='browser'&&!g.title.toLowerCase().includes('browser'))).to.eql(true));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?search=browser"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 2,\n      \"title\": \"Game Contoh Browser\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"fixture\",\n      \"updated_at\": \"2026-10-09T08:22:09.000000Z\"\n    },\n    {\n      \"id\": 8,\n      \"title\": \"Orbit Bravo\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"http://127.0.0.1:8000/api/games?search=browser&page=1\",\n    \"last\": \"http://127.0.0.1:8000/api/games?search=browser&page=1\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"from\": 1,\n    \"last_page\": 1,\n    \"links\": [\n      {\n        \"url\": null,\n        \"label\": \"&laquo; Previous\",\n        \"page\": null,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?search=browser&page=1\",\n        \"label\": \"1\",\n        \"page\": 1,\n        \"active\": true\n      },\n      {\n        \"url\": null,\n        \"label\": \"Next &raquo;\",\n        \"page\": null,\n        \"active\": false\n      }\n    ],\n    \"path\": \"http://127.0.0.1:8000/api/games\",\n    \"per_page\": 5,\n    \"to\": 2,\n    \"total\": 2\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Search Empty",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?search=tidak-ada-987654321"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test('Collection contract',()=>{pm.expect(b).to.have.all.keys('data','links','meta');pm.expect(b.data).to.be.an('array');});",
+              "pm.test('Check 1',()=>{pm.expect(b.data).to.eql([]);});",
+              "pm.test('Check 2',()=>{pm.expect(b.meta.total).to.eql(0);});",
+              "pm.test('Check 3',()=>{pm.expect(b.links.next).to.eql(null);});",
+              "pm.test('Pagination metadata',()=>{pm.expect(b.links).to.have.all.keys('first','last','prev','next');pm.expect(b.meta.current_page).to.be.a('number');pm.expect(b.meta.per_page).to.be.within(1,50);pm.expect(b.meta.total).to.be.at.least(b.data.length);});",
+              "pm.test('GameResource fields and types',()=>{b.data.forEach(g=>{pm.expect(g).to.have.all.keys('id','title','platform','is_free','source','updated_at');pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.be.a('string');});});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?search=tidak-ada-987654321"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [],\n  \"links\": {\n    \"first\": \"http://127.0.0.1:8000/api/games?search=tidak-ada-987654321&page=1\",\n    \"last\": \"http://127.0.0.1:8000/api/games?search=tidak-ada-987654321&page=1\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"from\": null,\n    \"last_page\": 1,\n    \"links\": [\n      {\n        \"url\": null,\n        \"label\": \"&laquo; Previous\",\n        \"page\": null,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?search=tidak-ada-987654321&page=1\",\n        \"label\": \"1\",\n        \"page\": 1,\n        \"active\": true\n      },\n      {\n        \"url\": null,\n        \"label\": \"Next &raquo;\",\n        \"page\": null,\n        \"active\": false\n      }\n    ],\n    \"path\": \"http://127.0.0.1:8000/api/games\",\n    \"per_page\": 5,\n    \"to\": null,\n    \"total\": 0\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Sort Ascending",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?search=Orbit&sort=title&direction=asc&per_page=10"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test('Collection contract',()=>{pm.expect(b).to.have.all.keys('data','links','meta');pm.expect(b.data).to.be.an('array');});",
+              "pm.test('Check 1',()=>{pm.expect(b.data.map(g=>g.title)).to.eql(['Orbit Alpha','Orbit Bravo','Orbit Charlie']);});",
+              "pm.test('Pagination metadata',()=>{pm.expect(b.links).to.have.all.keys('first','last','prev','next');pm.expect(b.meta.current_page).to.be.a('number');pm.expect(b.meta.per_page).to.be.within(1,50);pm.expect(b.meta.total).to.be.at.least(b.data.length);});",
+              "pm.test('GameResource fields and types',()=>{b.data.forEach(g=>{pm.expect(g).to.have.all.keys('id','title','platform','is_free','source','updated_at');pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.be.a('string');});});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?search=Orbit&sort=title&direction=asc&per_page=10"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 7,\n      \"title\": \"Orbit Alpha\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    },\n    {\n      \"id\": 8,\n      \"title\": \"Orbit Bravo\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    },\n    {\n      \"id\": 9,\n      \"title\": \"Orbit Charlie\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=10&page=1\",\n    \"last\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=10&page=1\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"from\": 1,\n    \"last_page\": 1,\n    \"links\": [\n      {\n        \"url\": null,\n        \"label\": \"&laquo; Previous\",\n        \"page\": null,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=10&page=1\",\n        \"label\": \"1\",\n        \"page\": 1,\n        \"active\": true\n      },\n      {\n        \"url\": null,\n        \"label\": \"Next &raquo;\",\n        \"page\": null,\n        \"active\": false\n      }\n    ],\n    \"path\": \"http://127.0.0.1:8000/api/games\",\n    \"per_page\": 10,\n    \"to\": 3,\n    \"total\": 3\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Sort Descending",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?search=Orbit&sort=title&direction=desc&per_page=10"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test('Collection contract',()=>{pm.expect(b).to.have.all.keys('data','links','meta');pm.expect(b.data).to.be.an('array');});",
+              "pm.test('Check 1',()=>{pm.expect(b.data.map(g=>g.title)).to.eql(['Orbit Charlie','Orbit Bravo','Orbit Alpha']);});",
+              "pm.test('Pagination metadata',()=>{pm.expect(b.links).to.have.all.keys('first','last','prev','next');pm.expect(b.meta.current_page).to.be.a('number');pm.expect(b.meta.per_page).to.be.within(1,50);pm.expect(b.meta.total).to.be.at.least(b.data.length);});",
+              "pm.test('GameResource fields and types',()=>{b.data.forEach(g=>{pm.expect(g).to.have.all.keys('id','title','platform','is_free','source','updated_at');pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.be.a('string');});});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?search=Orbit&sort=title&direction=desc&per_page=10"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 9,\n      \"title\": \"Orbit Charlie\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    },\n    {\n      \"id\": 8,\n      \"title\": \"Orbit Bravo\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    },\n    {\n      \"id\": 7,\n      \"title\": \"Orbit Alpha\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=desc&per_page=10&page=1\",\n    \"last\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=desc&per_page=10&page=1\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"from\": 1,\n    \"last_page\": 1,\n    \"links\": [\n      {\n        \"url\": null,\n        \"label\": \"&laquo; Previous\",\n        \"page\": null,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=desc&per_page=10&page=1\",\n        \"label\": \"1\",\n        \"page\": 1,\n        \"active\": true\n      },\n      {\n        \"url\": null,\n        \"label\": \"Next &raquo;\",\n        \"page\": null,\n        \"active\": false\n      }\n    ],\n    \"path\": \"http://127.0.0.1:8000/api/games\",\n    \"per_page\": 10,\n    \"to\": 3,\n    \"total\": 3\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Invalid Sort",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?sort=password"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 422',()=>pm.response.to.have.status(422));",
+              "const b = pm.response.json();",
+              "pm.test('Check 1',()=>{pm.expect(b.errors.sort).to.eql(['The selected sort is invalid.']);});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 422 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?sort=password"
+          },
+          "status": "Unprocessable Content",
+          "code": 422,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"The selected sort is invalid.\",\n  \"errors\": {\n    \"sort\": [\n      \"The selected sort is invalid.\"\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Invalid Per Page",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?per_page=100"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 422',()=>pm.response.to.have.status(422));",
+              "const b = pm.response.json();",
+              "pm.test('Check 1',()=>{pm.expect(b.errors.per_page).to.eql(['The per page field must not be greater than 50.']);});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 422 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?per_page=100"
+          },
+          "status": "Unprocessable Content",
+          "code": 422,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"The per page field must not be greater than 50.\",\n  \"errors\": {\n    \"per_page\": [\n      \"The per page field must not be greater than 50.\"\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Combined Parameters",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=2"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test('Collection contract',()=>{pm.expect(b).to.have.all.keys('data','links','meta');pm.expect(b.data).to.be.an('array');});",
+              "pm.test('Check 1',()=>{pm.expect(b.data.map(g=>g.title)).to.eql(['Orbit Bravo']);});",
+              "pm.test('Check 2',()=>{pm.expect(b.meta.total).to.eql(3);});",
+              "pm.test('Check 3',()=>{pm.expect(b.links.next).to.include('search=Orbit&sort=title&direction=asc&per_page=1&page=3');});",
+              "pm.test('Pagination metadata',()=>{pm.expect(b.links).to.have.all.keys('first','last','prev','next');pm.expect(b.meta.current_page).to.be.a('number');pm.expect(b.meta.per_page).to.be.within(1,50);pm.expect(b.meta.total).to.be.at.least(b.data.length);});",
+              "pm.test('GameResource fields and types',()=>{b.data.forEach(g=>{pm.expect(g).to.have.all.keys('id','title','platform','is_free','source','updated_at');pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.be.a('string');});});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=2"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 8,\n      \"title\": \"Orbit Bravo\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"manual\",\n      \"updated_at\": \"2026-10-25T13:28:15.000000Z\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=1\",\n    \"last\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=3\",\n    \"prev\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=1\",\n    \"next\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=3\"\n  },\n  \"meta\": {\n    \"current_page\": 2,\n    \"from\": 2,\n    \"last_page\": 3,\n    \"links\": [\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=1\",\n        \"label\": \"&laquo; Previous\",\n        \"page\": 1,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=1\",\n        \"label\": \"1\",\n        \"page\": 1,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=2\",\n        \"label\": \"2\",\n        \"page\": 2,\n        \"active\": true\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=3\",\n        \"label\": \"3\",\n        \"page\": 3,\n        \"active\": false\n      },\n      {\n        \"url\": \"http://127.0.0.1:8000/api/games?search=Orbit&sort=title&direction=asc&per_page=1&page=3\",\n        \"label\": \"Next &raquo;\",\n        \"page\": 3,\n        \"active\": false\n      }\n    ],\n    \"path\": \"http://127.0.0.1:8000/api/games\",\n    \"per_page\": 1,\n    \"to\": 2,\n    \"total\": 3\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Invalid Page",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?page=0"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 422',()=>pm.response.to.have.status(422));",
+              "const b = pm.response.json();",
+              "pm.test('Check 1',()=>{pm.expect(b.errors.page).to.be.an('array');});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 422 - 29 Oktober 2026",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?page=0"
+          },
+          "status": "Unprocessable Content",
+          "code": 422,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"The page field must be at least 1.\",\n  \"errors\": {\n    \"page\": [\n      \"The page field must be at least 1.\"\n    ]\n  }\n}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    }
+  ]
+}
